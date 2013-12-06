@@ -56,6 +56,8 @@ IDR_MENU MENU DISCARDABLE
 BEGIN
     MENUITEM "重新開始",                IDC_RESET
     MENUITEM "放棄這一手",                IDC_ABORT
+    //MENUITEM "白",                IDC_White
+    //MENUITEM "黑",                IDC_Black
 END
 
 

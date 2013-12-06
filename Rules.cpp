@@ -1,8 +1,8 @@
 
-
-int Playable(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
+int Playable(int Y,int X,int Player,unsigned char *ReverseRecord,char MyTestTable[8][8])
 {
     int I,J;
+    (*ReverseRecord)=0;
     if(Y-1>=0)
     {
         if (MyTestTable[Y-1][X]==(Player==1?-1:1))
@@ -10,7 +10,10 @@ int Playable(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
             for (I=Y-1; I>=0; I--)
             {
                 if (MyTestTable[I][X]==Player)
-                    ReverseRecord[1]=1;  // |
+                {
+                     (*ReverseRecord)|=0x01;
+                     break;
+                }
                 else if (MyTestTable[I][X]==0)
                     break;
             }
@@ -24,7 +27,10 @@ int Playable(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
             for (I=Y-1,J=X-1; J>=0&&I>=0; J--,I--)
             {
                 if (MyTestTable[I][J]==Player)
-                    ReverseRecord[2]=1;  // \ //
+                {
+                     (*ReverseRecord)|=0x02;
+                     break;
+                }
                 else if (MyTestTable[I][J]==0)
                     break;
             }
@@ -39,7 +45,10 @@ int Playable(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
             for (J=X-1; J>=0; J--)
             {
                 if (MyTestTable[Y][J]==Player)
-                    ReverseRecord[3]=1;  // - //
+                {
+                     (*ReverseRecord)|=0x04;
+                     break;
+                }
                 else if (MyTestTable[Y][J]==0)
                     break;
             }
@@ -53,7 +62,10 @@ int Playable(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
             for (I=Y+1,J=X-1; J>=0&&I<8; J--,I++)
             {
                 if (MyTestTable[I][J]==Player)
-                    ReverseRecord[4]=1;  // / //
+                {
+                     (*ReverseRecord)|=0x08;
+                     break;
+                }
                 else if (MyTestTable[I][J]==0)
                     break;
             }
@@ -67,7 +79,10 @@ int Playable(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
             for (I=Y+1; I<8; I++)
             {
                 if (MyTestTable[I][X]==Player)
-                    ReverseRecord[5]=1;  // | //
+                {
+                     (*ReverseRecord)|=0x10;
+                     break;
+                }
                 else if (MyTestTable[I][X]==0)
                     break;
             }
@@ -81,7 +96,10 @@ int Playable(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
             for (I=Y+1,J=X+1; J<8&&I<8; J++,I++)
             {
                 if (MyTestTable[I][J]==Player)
-                    ReverseRecord[6]=1;  // \ //
+                {
+                     (*ReverseRecord)|=0x20;
+                     break;
+                }
                 else if (MyTestTable[I][J]==0)
                     break;
             }
@@ -94,7 +112,10 @@ int Playable(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
             for (J=X+1; J<8; J++)
             {
                 if (MyTestTable[Y][J]==Player)
-                    ReverseRecord[7]=1;  // - //
+                {
+                     (*ReverseRecord)|=0x40;
+                     break;
+                }
                 else if (MyTestTable[Y][J]==0)
                     break;
             }
@@ -107,21 +128,23 @@ int Playable(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
             for (I=Y-1,J=X+1; J<8&&I>=0; J++,I--)
             {
                 if (MyTestTable[I][J]==Player)
-                    ReverseRecord[8]=1; // / //
+                {
+                     (*ReverseRecord)|=0x80;
+                     break;
+                }
                 else if (MyTestTable[I][J]==0)
                     break;
             }
         }
     }
 
-    return ReverseRecord[1]+ReverseRecord[2]+ReverseRecord[3]+ReverseRecord[4]
-           +ReverseRecord[5]+ReverseRecord[6]+ReverseRecord[7]+ReverseRecord[8];
+    return (*ReverseRecord)==0?0:1;
 }
 
-int Reverse(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
+int Reverse(int Y,int X,int Player,unsigned char ReverseRecord,char MyTestTable[8][8])
 {
     int I,J;
-    if (ReverseRecord[1]==1)
+    if (ReverseRecord&0x01)
     {
         for (I=Y-1; I>=0; I--)
         {
@@ -132,7 +155,7 @@ int Reverse(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
         }
     }
 
-    if (ReverseRecord[2]==1)
+    if (ReverseRecord&0x02)
     {
         for (I=Y-1,J=X-1; J>=0&&I>=0; J--,I--)
         {
@@ -144,7 +167,7 @@ int Reverse(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
     }
 
 
-    if (ReverseRecord[3]==1)
+    if (ReverseRecord&0x04)
     {
         for (J=X-1; J>=0; J--)
         {
@@ -155,7 +178,7 @@ int Reverse(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
         }
     }
 
-    if (ReverseRecord[4]==1)
+    if (ReverseRecord&0x08)
     {
         for (I=Y+1,J=X-1; J>=0&&I<8; J--,I++)
         {
@@ -166,7 +189,7 @@ int Reverse(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
         }
     }
 
-    if (ReverseRecord[5]==1)
+    if (ReverseRecord&0x10)
     {
         for (I=Y+1; I<8; I++)
         {
@@ -177,7 +200,7 @@ int Reverse(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
         }
     }
 
-    if (ReverseRecord[6]==1)
+    if (ReverseRecord&0x20)
     {
         for (I=Y+1,J=X+1; J<8&&I<8; J++,I++)
         {
@@ -188,7 +211,7 @@ int Reverse(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
         }
     }
 
-    if (ReverseRecord[7]==1)
+    if (ReverseRecord&0x40)
     {
         for (J=X+1; J<8; J++)
         {
@@ -199,7 +222,7 @@ int Reverse(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8])
         }
     }
 
-    if (ReverseRecord[8]==1)
+    if (ReverseRecord&0x80)
     {
         for (I=Y-1,J=X+1; J<8&&I>=0; J++,I--)
         {

@@ -1,25 +1,21 @@
-#include <stdio.h>
 #include <windows.h>
+#include <stdio.h>
 #include "resource.h"
-extern void ShowBoard();
-extern void InitializeHotSpot();
-extern void SetHotSpot(int X,int Y,int Side);
-extern int Playable(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8]);
-extern int Reverse(int Y,int X,int Player,int ReverseRecord[9],int MyTestTable[8][8]);
+
+extern int Playable(int Y,int X,int Player,unsigned char* ReverseRecord,char MyTestTable[8][8]);
+extern int Reverse(int Y,int X,int Player,unsigned char ReverseRecord,char MyTestTable[8][8]);
 //-----------------------------------------------------------
+
+extern int CC;
 
 #define player1 1	//定義玩家1
 #define player2 -1
-#define VS_COM 1	//定義遊戲方式，對電腦
-#define VS_PLAYER 2	//單機對戰
-#define VS_CONNECT 3	//連線對戰
 #define BkColor RGB(0,150,250)	//定義棋盤顏色
 #define board_width 50		//棋盤格寬度
 
 //-----------------------------------------------------------
-
-int MyTable[8][8],	//棋盤陣列，判斷是否已下子
-    who_play,			//判斷現在誰玩
+char MyTable[8][8];
+int who_play,			//判斷現在誰玩
     play_mode;			//判斷遊戲方式
 
 int  Round;
@@ -59,7 +55,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
         MessageBox(NULL,TEXT("註冊視窗失敗"),AppName,MB_ICONERROR);
         return 0;
     }
-    hwnd=CreateWindowEx(WS_EX_TOPMOST,AppName,"黑白棋 by Netsphere",
+    hwnd=CreateWindowEx(WS_EX_TOPMOST,AppName,"黑白棋 v0.3 by JSW",
                         WS_CAPTION|WS_BORDER|WS_SYSMENU|WS_MINIMIZEBOX,
                         0,0,500,500,
                         NULL,LoadMenu(hInstance,MAKEINTRESOURCE(IDR_MENU)),hInstance,NULL);
@@ -85,7 +81,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
     int check_win,i,j,w,b;
     TCHAR text[20];
     RECT rt_text;
-    int ReverseRecord[9]= {0};
+    unsigned char ReverseRecord=0;
     Move PreviousMove;
     switch(msg)
     {
@@ -166,10 +162,12 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
         pchoice.x=pchoice.x/board_width;//轉換為棋盤格交線位置
         pchoice.y=pchoice.y/board_width;
 
-        if(who_play==-1&&MyTable[pchoice.y][pchoice.x]==0&&(pchoice.x>=0&&pchoice.x<=7)&&(pchoice.y>=0&&pchoice.y<=7))
+        if(MyTable[pchoice.y][pchoice.x]==0&&(pchoice.x>=0&&pchoice.x<=7)&&(pchoice.y>=0&&pchoice.y<=7))
         {
-            if (Playable(pchoice.y,pchoice.x,who_play,ReverseRecord,MyTable)!=0)
+            ReverseRecord=0;
+            if (Playable(pchoice.y,pchoice.x,who_play,&ReverseRecord,MyTable)!=0)
             {
+                CC=0;
                 PaintMyTable(hwnd,rt_MyTable,pchoice,who_play);//畫棋子
                 MyTable[pchoice.y][pchoice.x]=who_play;
                 Reverse(pchoice.y,pchoice.x,who_play,ReverseRecord,MyTable);
@@ -177,7 +175,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
                 who_play=(who_play==player1?player2:player1);
                 InvalidateRect(hwnd,NULL,1);
                 UpdateWindow(hwnd);
-                /**/
+
                 hdc=GetDC(hwnd);
                 SetRect(&rt_text,0,0,400,400);
                 SetTextColor(hdc,RGB(255,0,0));
@@ -185,15 +183,16 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
                 sprintf(text,"AI思考中...");
                 DrawText(hdc,text,-1,&rt_text,DT_CENTER);
                 ReleaseDC(hwnd,hdc);
-                /**/
-                memset(ReverseRecord,0,4*9);
+                ReverseRecord=0;
                 PreviousMove=NextMove((who_play==1)?1:-1);
                 PaintMyTable(hwnd,rt_MyTable,PreviousMove,3);
                 _sleep(1000);
                 Round++;
                 who_play=(who_play==player1?player2:player1);
+                //printf("%d %d\n",Round,CC);
             }
             InvalidateRect(hwnd,NULL,0);
+
         }
         return 0;
     case WM_RBUTTONDOWN:
@@ -230,13 +229,27 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
             EnableMenuItem(hMenu,IDC_MULTI,MF_ENABLED);
             InvalidateRect(hwnd,NULL,TRUE);
             ResetGame();
+            Round=0;
+            printf("=============\n");
             break;
+
         case IDC_ABORT:
             who_play=(who_play==player1?player2:player1);
             NextMove((who_play==1)?1:-1);
             who_play=(who_play==player1?player2:player1);
             InvalidateRect(hwnd,NULL,1);
             UpdateWindow(hwnd);
+            break;
+        case IDC_White:
+            who_play=player1;
+            InvalidateRect(hwnd,NULL,1);
+            UpdateWindow(hwnd);
+            break;
+        case IDC_Black:
+            who_play=player2;
+            InvalidateRect(hwnd,NULL,1);
+            UpdateWindow(hwnd);
+            break;
         }
         return 0;
     }
@@ -289,6 +302,8 @@ void PaintMyTable(HWND hwnd,RECT rt,Move pt,int who)//畫棋子
     hdc=GetDC(hwnd);
     RECT rt_text;
     HPEN hPen;
+    if (!((pt.x >=0 && pt.x<=7 ) && (pt.y >=0 && pt.y<=7 )))
+        return;
     if(who==player1)
     {
         hbr=CreateSolidBrush(RGB(255,255,255));//黑棋
@@ -301,6 +316,16 @@ void PaintMyTable(HWND hwnd,RECT rt,Move pt,int who)//畫棋子
     }
     else if (who==3)
     {
+        if (who_play==player1)
+        {
+            hbr=CreateSolidBrush(RGB(255,255,255));//黑棋
+            SelectObject(hdc,hbr);
+        }
+        else
+        {
+            hbr=CreateSolidBrush(RGB(0,0,0));//白棋
+            SelectObject(hdc,hbr);
+        }
         hPen = CreatePen(PS_DASH, 2, RGB(255, 0, 0));
         SelectObject(hdc,hPen);
     }

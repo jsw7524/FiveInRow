@@ -14,8 +14,10 @@
 #define IDC_DOUBLE                      40010
 #define IDC_RESET                       40011
 
+#define IDC_White                       40021
+#define IDC_Black                       40022
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        103
