@@ -14,8 +14,9 @@
 #define IDC_DOUBLE                      40010
 #define IDC_RESET                       40011
 
-#define IDC_White                       40021
-#define IDC_Black                       40022
+#define IDC_WHITE                       40021
+#define IDC_BLACK                      40022
+#define IDC_BENCHMARK                   40032
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED

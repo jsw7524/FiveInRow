@@ -1,3 +1,5 @@
+int Playable(int Y,int X,int Player,unsigned char *ReverseRecord,char MyTestTable[8][8]);
+int Reverse(int Y,int X,int Player,unsigned char ReverseRecord,char MyTestTable[8][8]);
 
 int Playable(int Y,int X,int Player,unsigned char *ReverseRecord,char MyTestTable[8][8])
 {

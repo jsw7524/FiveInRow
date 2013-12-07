@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "resource.h"
 
+double Benchmark_Test();
 extern int Playable(int Y,int X,int Player,unsigned char* ReverseRecord,char MyTestTable[8][8]);
 extern int Reverse(int Y,int X,int Player,unsigned char ReverseRecord,char MyTestTable[8][8]);
 //-----------------------------------------------------------
@@ -119,14 +120,14 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
         if(who_play==-1)
         {
             SetRect(&rt_text,400,70,500,110);
-            SetTextColor(hdc,RGB(255,255,255));
+            SetTextColor(hdc,RGB(0,0,0));
             SetBkColor(hdc,BkColor);
             DrawText(hdc,"黑子",-1,&rt_text,DT_CENTER);
         }
         else
         {
             SetRect(&rt_text,400,70,500,110);
-            SetTextColor(hdc,RGB(0,0,0));
+            SetTextColor(hdc,RGB(255,255,255));
             SetBkColor(hdc,BkColor);
             DrawText(hdc,"白子",-1,&rt_text,DT_CENTER);
         }
@@ -149,11 +150,9 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
         SetBkColor(hdc,BkColor);
         sprintf(text,"白子數:%d",b);
         DrawText(hdc,text,-1,&rt_text,DT_CENTER);
-
         SetRect(&rt_text,400,250,500,290);
         sprintf(text,"黑子數:%d",w);
         DrawText(hdc,text,-1,&rt_text,DT_CENTER);
-
         EndPaint(hwnd,&ps);
         return 0;
     case WM_LBUTTONDOWN:
@@ -164,9 +163,9 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
 
         if(MyTable[pchoice.y][pchoice.x]==0&&(pchoice.x>=0&&pchoice.x<=7)&&(pchoice.y>=0&&pchoice.y<=7))
         {
-            ReverseRecord=0;
             if (Playable(pchoice.y,pchoice.x,who_play,&ReverseRecord,MyTable)!=0)
             {
+
                 CC=0;
                 PaintMyTable(hwnd,rt_MyTable,pchoice,who_play);//畫棋子
                 MyTable[pchoice.y][pchoice.x]=who_play;
@@ -186,12 +185,17 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
                 ReverseRecord=0;
                 PreviousMove=NextMove((who_play==1)?1:-1);
                 PaintMyTable(hwnd,rt_MyTable,PreviousMove,3);
-                _sleep(1000);
+                //_sleep(1000);
                 Round++;
                 who_play=(who_play==player1?player2:player1);
-                //printf("%d %d\n",Round,CC);
+                printf("%d %d\n",Round,CC);
+                InvalidateRect(hwnd,NULL,0);
+                UpdateWindow(hwnd);
+                who_play=(who_play==player1?player2:player1);
+                PaintMyTable(hwnd,rt_MyTable,PreviousMove,3);
+                who_play=(who_play==player1?player2:player1);
             }
-            InvalidateRect(hwnd,NULL,0);
+
 
         }
         return 0;
@@ -240,12 +244,27 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
             InvalidateRect(hwnd,NULL,1);
             UpdateWindow(hwnd);
             break;
-        case IDC_White:
+        case IDC_BENCHMARK:
+            LARGE_INTEGER t1, t2, ts;
+            ResetGame();
+            QueryPerformanceFrequency(&ts);
+            QueryPerformanceCounter(&t1);
+            for (i=0,j=1; i<64; i++,j*=-1)
+            {
+                NextMove(j);
+                InvalidateRect(hwnd,NULL,1);
+                UpdateWindow(hwnd);
+            }
+            QueryPerformanceCounter(&t2);
+            sprintf(text,"時間: %lf\n",(t2.QuadPart-t1.QuadPart)/(double)(ts.QuadPart));
+            MessageBox(hwnd,text,"結果",0);
+            break;
+        case IDC_WHITE:
             who_play=player1;
             InvalidateRect(hwnd,NULL,1);
             UpdateWindow(hwnd);
             break;
-        case IDC_Black:
+        case IDC_BLACK:
             who_play=player2;
             InvalidateRect(hwnd,NULL,1);
             UpdateWindow(hwnd);
