@@ -54,11 +54,21 @@ END
 
 IDR_MENU MENU DISCARDABLE
 BEGIN
-    MENUITEM "重新開始",                IDC_RESET
-    MENUITEM "放棄這一手",                IDC_ABORT
-    //MENUITEM "白",                IDC_WHITE
-    //MENUITEM "黑",                IDC_BLACK
-    MENUITEM "BENCHMARK",                IDC_BENCHMARK
+    POPUP "Options"
+        BEGIN
+            MENUITEM "Reset Game",                IDC_RESET
+            POPUP "Select player"
+                BEGIN
+                    MENUITEM "White",                IDC_WHITE
+                    MENUITEM "Black",                IDC_BLACK
+                END
+            MENUITEM SEPARATOR
+            MENUITEM "BENCHMARK",               IDC_BENCHMARK
+            MENUITEM SEPARATOR
+            MENUITEM "About",               IDC_VISION
+    END
+    MENUITEM "Pass",                        IDC_ABORT
+
 END
 
 

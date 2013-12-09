@@ -1,5 +1,27 @@
+char MyTable[8][8];
+
 int Playable(int Y,int X,int Player,unsigned char *ReverseRecord,char MyTestTable[8][8]);
 int Reverse(int Y,int X,int Player,unsigned char ReverseRecord,char MyTestTable[8][8]);
+
+int GetBlackNumber()
+{
+    int B,I,J;
+    for (B=0,I=0; I<8; I++)
+        for (J=0; J<8; J++)
+            if (MyTable[I][J]==-1)
+                B++;
+    return B;
+}
+
+int GetWhiteNumber()
+{
+    int W,I,J;
+    for (W=0,I=0; I<8; I++)
+        for (J=0; J<8; J++)
+            if (MyTable[I][J]==1)
+                W++;
+    return W;
+}
 
 int Playable(int Y,int X,int Player,unsigned char *ReverseRecord,char MyTestTable[8][8])
 {
@@ -13,8 +35,8 @@ int Playable(int Y,int X,int Player,unsigned char *ReverseRecord,char MyTestTabl
             {
                 if (MyTestTable[I][X]==Player)
                 {
-                     (*ReverseRecord)|=0x01;
-                     break;
+                    (*ReverseRecord)|=0x01;
+                    break;
                 }
                 else if (MyTestTable[I][X]==0)
                     break;
@@ -30,8 +52,8 @@ int Playable(int Y,int X,int Player,unsigned char *ReverseRecord,char MyTestTabl
             {
                 if (MyTestTable[I][J]==Player)
                 {
-                     (*ReverseRecord)|=0x02;
-                     break;
+                    (*ReverseRecord)|=0x02;
+                    break;
                 }
                 else if (MyTestTable[I][J]==0)
                     break;
@@ -48,8 +70,8 @@ int Playable(int Y,int X,int Player,unsigned char *ReverseRecord,char MyTestTabl
             {
                 if (MyTestTable[Y][J]==Player)
                 {
-                     (*ReverseRecord)|=0x04;
-                     break;
+                    (*ReverseRecord)|=0x04;
+                    break;
                 }
                 else if (MyTestTable[Y][J]==0)
                     break;
@@ -65,8 +87,8 @@ int Playable(int Y,int X,int Player,unsigned char *ReverseRecord,char MyTestTabl
             {
                 if (MyTestTable[I][J]==Player)
                 {
-                     (*ReverseRecord)|=0x08;
-                     break;
+                    (*ReverseRecord)|=0x08;
+                    break;
                 }
                 else if (MyTestTable[I][J]==0)
                     break;
@@ -82,8 +104,8 @@ int Playable(int Y,int X,int Player,unsigned char *ReverseRecord,char MyTestTabl
             {
                 if (MyTestTable[I][X]==Player)
                 {
-                     (*ReverseRecord)|=0x10;
-                     break;
+                    (*ReverseRecord)|=0x10;
+                    break;
                 }
                 else if (MyTestTable[I][X]==0)
                     break;
@@ -99,8 +121,8 @@ int Playable(int Y,int X,int Player,unsigned char *ReverseRecord,char MyTestTabl
             {
                 if (MyTestTable[I][J]==Player)
                 {
-                     (*ReverseRecord)|=0x20;
-                     break;
+                    (*ReverseRecord)|=0x20;
+                    break;
                 }
                 else if (MyTestTable[I][J]==0)
                     break;
@@ -115,8 +137,8 @@ int Playable(int Y,int X,int Player,unsigned char *ReverseRecord,char MyTestTabl
             {
                 if (MyTestTable[Y][J]==Player)
                 {
-                     (*ReverseRecord)|=0x40;
-                     break;
+                    (*ReverseRecord)|=0x40;
+                    break;
                 }
                 else if (MyTestTable[Y][J]==0)
                     break;
@@ -131,8 +153,8 @@ int Playable(int Y,int X,int Player,unsigned char *ReverseRecord,char MyTestTabl
             {
                 if (MyTestTable[I][J]==Player)
                 {
-                     (*ReverseRecord)|=0x80;
-                     break;
+                    (*ReverseRecord)|=0x80;
+                    break;
                 }
                 else if (MyTestTable[I][J]==0)
                     break;
