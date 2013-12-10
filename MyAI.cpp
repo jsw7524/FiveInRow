@@ -10,6 +10,8 @@ struct Move
 };
 
 int CC;
+int DepthLimit=8;
+
 int PriorityMap[8][8]=
 {
     128,0,8,8,8,8,0,128,
@@ -58,6 +60,7 @@ Move NextMove(int Side)
     char NextBoard[8][8];
     Move MyMove[64];
     int Index;
+    int Min=99999,Max=-99999;
     for (Index=0,I=0; I<8; I++)
     {
         for (J=0; J<8; J++)
@@ -81,7 +84,21 @@ Move NextMove(int Side)
         memcpy(NextBoard,MyTable,8*8);
         NextBoard[MyMove[I].Y][MyMove[I].X]=Side;
         Reverse(MyMove[I].Y,MyMove[I].X,Side,RR,NextBoard);
-        MyMove[I].Score=MinMax(NextBoard,(Side==1?-1:1),0,-99999,99999);
+        K=MyMove[I].Score=MinMax(NextBoard,(Side==1?-1:1),0,Max,Min);
+        if (Side==1)
+        {
+            if (K>Max)
+            {
+                Max=K;
+            }
+        }
+        else
+        {
+            if (K<Min)
+            {
+                Min=K;
+            }
+        }
     }
     if (I==0)
         return {-1,-1,0};
@@ -100,7 +117,7 @@ int MinMax(char TestBoard[8][8], int Side, int Depth,int Alpha,int Beta)
     int Max=-99999,Min=99999;
     Move MyMove[64];
     int Index;
-    if (Depth < 8)
+    if (Depth < DepthLimit)
     {
         for (Index=0,I=0; I<8; I++)
         {

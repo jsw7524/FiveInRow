@@ -1,18 +1,18 @@
 # depslib dependency file v1.0
-1386600954 source:c:\google driver\ai\reversi\gobang.rc
+1386674079 source:c:\google driver\ai\reversi\gobang.rc
 	"resource.h"
 	"afxres.h"
 
-1386600245 c:\google driver\ai\reversi\resource.h
+1386670833 c:\google driver\ai\reversi\resource.h
 
 1386604870 source:c:\google driver\ai\reversi\rules.cpp
 
-1386505640 source:c:\google driver\ai\reversi\myai.cpp
+1386669154 source:c:\google driver\ai\reversi\myai.cpp
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 
-1386611159 source:c:\google driver\ai\reversi\interface.cpp
+1386673979 source:c:\google driver\ai\reversi\interface.cpp
 	<windows.h>
 	<winable.h>
 	<stdio.h>

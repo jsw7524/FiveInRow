@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+
 //
 #include "resource.h"
 
@@ -46,7 +46,6 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // Menu
@@ -60,7 +59,13 @@ BEGIN
             POPUP "Select player"
                 BEGIN
                     MENUITEM "White",                IDC_WHITE
-                    MENUITEM "Black",                IDC_BLACK
+                    MENUITEM "Black",                IDC_BLACK,CHECKED
+                END
+            POPUP "Level"
+                BEGIN
+                    MENUITEM "Easy",                IDC_LEVELEASY
+                    MENUITEM "Standard",            IDC_LEVELSTANDARD,CHECKED
+                    MENUITEM "Hard",                IDC_LEVELHARD
                 END
             MENUITEM SEPARATOR
             MENUITEM "BENCHMARK",               IDC_BENCHMARK

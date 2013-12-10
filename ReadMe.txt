@@ -4,7 +4,7 @@ It is recommended to install Code::Blocks 12.11 first, and then open Reversi.cbp
 
 The AI algorithm uses MinMax tree with alpha-beta pruning. Especially, it has a priority next-step mechanism to make alpha-beta pruning more efficient.
 
-The search depth is 8 by default and is possible to deepen and parallelize in the future.
+The search depth is 8 by default and is possible to deepen and be parallelized in the future.
 
 Furthermore, There is a benchmark option on the menu, which mainly tests the CPU's capability for integer.
 
