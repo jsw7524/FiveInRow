@@ -11,6 +11,7 @@ struct Move
 
 int CC;
 int DepthLimit=8;
+extern int Round;
 
 int PriorityMap[8][8]=
 {

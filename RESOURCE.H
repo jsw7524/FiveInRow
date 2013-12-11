@@ -13,6 +13,7 @@
 #define IDC_ABORT                       40009
 #define IDC_DOUBLE                      40010
 #define IDC_RESET                       40011
+#define IDC_RESTORATION                 40013
 
 #define IDC_WHITE                       40021
 #define IDC_BLACK                       40022

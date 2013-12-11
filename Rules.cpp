@@ -1,7 +1,42 @@
-char MyTable[8][8];
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
+char MyTable[8][8];
+char BackUp[8][8];
+int  Round;
+
+void  BackUpMyTable();
+void  RestoreMyTable();
 int Playable(int Y,int X,int Player,unsigned char *ReverseRecord,char MyTestTable[8][8]);
 int Reverse(int Y,int X,int Player,unsigned char ReverseRecord,char MyTestTable[8][8]);
+int GetBlackNumber();
+int GetWhiteNumber();
+
+void ResetGame()
+{
+    int i,j;
+    for(i=0; i<8; i++)
+        for(j=0; j<8; j++)
+            MyTable[i][j]=0;
+
+    MyTable[3][3]=1;
+    MyTable[3][4]=-1;
+    MyTable[4][3]=-1;
+    MyTable[4][4]=1;
+    Round=4;
+    BackUpMyTable();
+}
+
+void  BackUpMyTable()
+{
+    memcpy(BackUp,MyTable,8*8);
+}
+
+void  RestoreMyTable()
+{
+    memcpy(MyTable,BackUp,8*8);
+}
 
 int GetBlackNumber()
 {

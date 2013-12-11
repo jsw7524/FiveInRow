@@ -67,6 +67,7 @@ BEGIN
                     MENUITEM "Standard",            IDC_LEVELSTANDARD,CHECKED
                     MENUITEM "Hard",                IDC_LEVELHARD
                 END
+            MENUITEM "Undo",                IDC_RESTORATION
             MENUITEM SEPARATOR
             MENUITEM "BENCHMARK",               IDC_BENCHMARK
             MENUITEM SEPARATOR

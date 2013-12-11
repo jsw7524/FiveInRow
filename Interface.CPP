@@ -6,34 +6,36 @@
 #define PLAYER1 1	//白
 #define PLAYER2 -1  //黑
 #define BKCOLOR RGB(0,150,250)	//定義棋盤顏色
-#define BOARD_WIDTH 50		//棋盤格寬度
+#define BOARD_WIDTH 50		    //棋盤格寬度
 
 //-----------------------------------------------------------
-struct Move		//定義結構儲存棋子的位置
+struct Move		                //定義結構儲存棋子的位置
 {
     int x;
     int y;
     int Score;
 };
 
-double Benchmark_Test();
 extern int Playable(int Y,int X,int Player,unsigned char* ReverseRecord,char MyTestTable[8][8]);
 extern int Reverse(int Y,int X,int Player,unsigned char ReverseRecord,char MyTestTable[8][8]);
 extern int GetBlackNumber();
 extern int GetWhiteNumber();
 extern Move NextMove(int Side);
+extern void  RestoreMyTable();
+extern void  BackUpMyTable();
+extern void ResetGame();
 //-----------------------------------------------------------
 extern int CC;
 extern int DepthLimit;
 extern char MyTable[8][8];
+extern int  Round;
 //-----------------------------------------------------------
 int who_play;			//判斷現在誰玩
-int  Round;
+
 //----------------------------------------------------------
 LRESULT CALLBACK WndProc(HWND,UINT,WPARAM,LPARAM);//視窗訊息處理程式
 void PaintBoard(HDC,RECT,POINT);//繪製棋盤的函式
 void PaintMyTable(HWND,RECT,Move,int);//繪製棋子的函式
-void ResetGame();//重新設定遊戲資訊
 //----------------------------------------------------------
 
 int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,int nShowCmd)
@@ -50,7 +52,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
         MessageBox(NULL,TEXT("fail to initialize"),AppName,MB_ICONERROR);
         return 0;
     }
-    hwnd=CreateWindowEx(WS_EX_TOPMOST,AppName,"Reversi r1210",
+    hwnd=CreateWindowEx(WS_EX_TOPMOST,AppName,"Reversi - 13.12.11",
                         WS_CAPTION|WS_BORDER|WS_SYSMENU|WS_MINIMIZEBOX,
                         0,0,500,500,
                         NULL,LoadMenu(hInstance,MAKEINTRESOURCE(IDR_MENU)),hInstance,NULL);
@@ -68,7 +70,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
 {
     HDC hdc;
     PAINTSTRUCT ps;
-    HMENU hMenu;
+    static HMENU hMenu;
     static RECT rt_board,//儲存棋盤大小的變數
            rt_MyTable;//儲存棋子大小的變數
     static POINT pt_board;//儲存棋盤格線初始座標的變數
@@ -83,12 +85,11 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
     {
     case WM_CREATE:
         hMenu=GetMenu(hwnd);
+        EnableMenuItem(hMenu,IDC_RESTORATION,MF_GRAYED);
         ResetGame();
-        Round=0;
         who_play=PLAYER2;
         return 0;
     case WM_SIZE:
-
         SetRect(&rt_board,0,0,400,400);//設定棋盤大小
         SetRect(&rt_MyTable,0,0,50,50);
         pt_board.x=25;//設定第一調棋盤格線的起始座標位置
@@ -165,7 +166,10 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
         {
             if (Playable(pchoice.y,pchoice.x,who_play,&ReverseRecord,MyTable)!=0)
             {
+
                 CC=0;
+                BackUpMyTable();
+                EnableMenuItem(hMenu,IDC_RESTORATION,MF_ENABLED);
                 PaintMyTable(hwnd,rt_MyTable,pchoice,who_play);//畫棋子
                 MyTable[pchoice.y][pchoice.x]=who_play;
                 Reverse(pchoice.y,pchoice.x,who_play,ReverseRecord,MyTable);
@@ -183,7 +187,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
                 ReverseRecord=0;
                 PreviousMove=NextMove((who_play==1)?1:-1);
                 PaintMyTable(hwnd,rt_MyTable,PreviousMove,3);
-                //_sleep(1000);
+                //_sleep(100);
                 Round++;
                 who_play=(who_play==PLAYER1?PLAYER2:PLAYER1);
                 printf("%d %d\n",Round,CC);
@@ -199,13 +203,13 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
         PostQuitMessage(0);
         return 0;
     case WM_COMMAND:
-        hMenu=GetMenu(hwnd);
+
         switch(LOWORD(wParam))
         {
         case IDC_RESET:
             InvalidateRect(hwnd,NULL,TRUE);
             ResetGame();
-            Round=0;
+            EnableMenuItem(hMenu,IDC_RESTORATION,MF_GRAYED);
             printf("=============\n");
             break;
         case IDC_ABORT:
@@ -225,9 +229,8 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
             DepthLimit=8;
             RECT rt1;
             EnableWindow(hwnd,0);
-            EnableMenuItem(hMenu,IDR_MENU,MF_DISABLED);
             ResetGame();
-            who_play=PLAYER2;
+            who_play=PLAYER1;
             QueryPerformanceFrequency(&ts);
             QueryPerformanceCounter(&t1);
             for (i=0,j=1; i<64; i++,j*=-1)
@@ -249,6 +252,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
             CheckMenuItem(hMenu,IDC_LEVELSTANDARD,MF_UNCHECKED);
             CheckMenuItem(hMenu,IDC_LEVELHARD,MF_UNCHECKED);
             ResetGame();
+            EnableMenuItem(hMenu,IDC_RESTORATION,MF_GRAYED);
             InvalidateRect(hwnd,NULL,1);
             UpdateWindow(hwnd);
             break;
@@ -258,6 +262,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
             CheckMenuItem(hMenu,IDC_LEVELSTANDARD,MF_CHECKED);
             CheckMenuItem(hMenu,IDC_LEVELHARD,MF_UNCHECKED);
             ResetGame();
+            EnableMenuItem(hMenu,IDC_RESTORATION,MF_GRAYED);
             InvalidateRect(hwnd,NULL,1);
             UpdateWindow(hwnd);
             break;
@@ -267,6 +272,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
             CheckMenuItem(hMenu,IDC_LEVELSTANDARD,MF_UNCHECKED);
             CheckMenuItem(hMenu,IDC_LEVELHARD,MF_CHECKED);
             ResetGame();
+            EnableMenuItem(hMenu,IDC_RESTORATION,MF_GRAYED);
             InvalidateRect(hwnd,NULL,1);
             UpdateWindow(hwnd);
             break;
@@ -283,6 +289,12 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
             who_play=PLAYER2;
             CheckMenuItem(hMenu,IDC_BLACK,MF_CHECKED);
             CheckMenuItem(hMenu,IDC_WHITE,MF_UNCHECKED);
+            InvalidateRect(hwnd,NULL,1);
+            UpdateWindow(hwnd);
+            break;
+        case IDC_RESTORATION:
+            RestoreMyTable();
+            EnableMenuItem(hMenu,IDC_RESTORATION,MF_GRAYED);
             InvalidateRect(hwnd,NULL,1);
             UpdateWindow(hwnd);
             break;
@@ -373,15 +385,4 @@ void PaintMyTable(HWND hwnd,RECT rt,Move pt,int who)//畫棋子
     ReleaseDC(hwnd,hdc);
 }
 
-void ResetGame()	//初始化遊戲資料
-{
-    int i,j;
-    for(i=0; i<8; i++)
-        for(j=0; j<8; j++)
-            MyTable[i][j]=0;//陣列設為0，表示尚未放置棋子
 
-    MyTable[3][3]=1;
-    MyTable[3][4]=-1;
-    MyTable[4][3]=-1;
-    MyTable[4][4]=1;
-}
