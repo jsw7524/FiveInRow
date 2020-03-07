@@ -1,0 +1,45 @@
+# depslib dependency file v1.0
+1439086756 source:c:\users\jsw\google\ai\five\gobang.rc
+	"resource.h"
+	"afxres.h"
+
+1437131439 c:\users\jsw\google\ai\five\resource.h
+
+1437131439 source:c:\users\jsw\google\ai\five\rules.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1442377510 source:c:\users\jsw\google\ai\five\interface.cpp
+	<windows.h>
+	<winable.h>
+	<stdio.h>
+	"resource.h"
+
+1440079633 source:c:\users\jsw\google\ai\five\ai.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1437229192 source:c:\users\jsw\google\ai\five3\gobang.rc
+	"resource.h"
+	"afxres.h"
+
+1437131439 c:\users\jsw\google\ai\five3\resource.h
+
+1437131439 source:c:\users\jsw\google\ai\five3\rules.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1437650893 source:c:\users\jsw\google\ai\five3\ai.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1437379391 source:c:\users\jsw\google\ai\five3\interface.cpp
+	<windows.h>
+	<winable.h>
+	<stdio.h>
+	"resource.h"
+

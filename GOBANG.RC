@@ -55,26 +55,18 @@ IDR_MENU MENU DISCARDABLE
 BEGIN
     POPUP "Options"
         BEGIN
-            MENUITEM "Reset Game",                IDC_RESET
             POPUP "Select player"
                 BEGIN
                     MENUITEM "White",                IDC_WHITE
                     MENUITEM "Black",                IDC_BLACK,CHECKED
                 END
-            POPUP "Level"
-                BEGIN
-                    MENUITEM "Easy",                IDC_LEVELEASY
-                    MENUITEM "Standard",            IDC_LEVELSTANDARD,CHECKED
-                    MENUITEM "Hard",                IDC_LEVELHARD
-                END
-            MENUITEM "Undo",                IDC_RESTORATION
-            MENUITEM SEPARATOR
+            MENUITEM "Order",                IDC_ORDER
+            //MENUITEM "Score",                IDC_SCORE
+            //MENUITEM SEPARATOR
             MENUITEM "BENCHMARK",               IDC_BENCHMARK
             MENUITEM SEPARATOR
             MENUITEM "About",               IDC_VISION
     END
-    MENUITEM "Pass",                        IDC_ABORT
-
 END
 
 

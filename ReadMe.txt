@@ -1,18 +1,19 @@
-This program is developed under Code::Blocks 12.11 with mingw gcc and runs on WIN32 platform.
+Copyright Jia-Sen Wu 2014
 
-It is recommended to install Code::Blocks 12.11 first, and then open Reversi.cbp for easy compiling.
+Note here first. This is indeed a free software. Hence, you have the right 
+to redistribute and modify except one thing special, that is the title
+and the name of program should remain the "Ruby&Waku" word for memorializing
+the important families of the author.
 
-The AI algorithm uses MinMax tree with alpha-beta pruning. Especially, it has a priority next-step mechanism to make alpha-beta pruning more efficient.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-The search depth is 8 by default and is possible to deepen and be parallelized in the future.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-Furthermore, There is a benchmark option on the menu, which mainly tests the CPU's capability for integer.
-
-Although this program is just a amateur program compared with other professional ones whose AI and UI are really good, it is, somehow, like my child.
-
-I make it line by line, little by little, and spend much time testing and finding bugs on it.
-
-There are still many places that could be enhanced such as parallelizing the AI algorithm, optimizing the priority next-step mechanism and etc.
-
-At last, it is glad to meet you.
-
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
